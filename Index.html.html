@@ -1,0 +1,530 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Carnet Digital Finec Microfinance</title>
+    <style>
+        :root{--bg:#eef4fb;--surface:#fff;--soft:#f8fafc;--border:#e2e8f0;--text:#334155;--muted:#64748b;--primary:#1e3a8a;--accent:#2563eb;--success:#10b981;--danger:#ef4444;--warning:#f59e0b}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        html{-webkit-text-size-adjust:100%}
+        body{min-height:100vh;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45;color:var(--text);background:radial-gradient(circle at top left,rgba(37,99,235,.08),transparent 28%),linear-gradient(180deg,#f7fafc 0%,var(--bg) 100%);overflow-x:hidden;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+        button,input{font:inherit}
+        button{border:0;cursor:pointer;touch-action:manipulation}
+        img{display:block;max-width:100%}
+        .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+        .container{max-width:1180px;margin:0 auto;background:var(--surface);border-radius:18px;overflow:hidden;box-shadow:0 18px 36px rgba(15,23,42,.08)}
+        .header{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:16px 18px;background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);color:#fff}
+        .logo-container{width:64px;height:64px;padding:6px;border-radius:16px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .logo-img{width:100%;height:100%;object-fit:contain;display:none;background:#fff;border-radius:10px;padding:6px}
+        .logo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;color:var(--primary);font-size:.72rem;font-weight:700;text-align:center;padding:4px}
+        .header-title{flex:1;min-width:0}
+        .header-title h1{font-size:clamp(1.1rem,2vw,1.55rem);line-height:1.2}
+        .header-title p{margin-top:4px;font-size:clamp(.78rem,1.2vw,.92rem);opacity:.92}
+        .header-btn,.upload-btn,.btn-sm,.pagination-btn,.ad-cta{min-height:40px;padding:8px 14px;border-radius:10px;font-weight:700}
+        .header-btn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.2)}
+        .upload-btn,.btn-sm,.pagination-btn{background:var(--accent);color:#fff}
+        .secondary-btn{min-height:40px;padding:8px 14px;border-radius:10px;font-weight:700;background:#fff;color:var(--primary);border:1px solid #bfdbfe}
+        .btn-danger{background:var(--danger)}
+        .ad-cta{background:#f97316;color:#fff}
+        .content{padding:18px;display:grid;gap:18px}
+        .section-title{color:var(--primary);font-size:clamp(1rem,1.8vw,1.2rem);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+        .panel,.history-section,.legal-mentions{border:1px solid var(--border);background:var(--surface);border-radius:16px;overflow:hidden}
+        .agency-grid,.two-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+        .agency-grid{background:var(--soft);padding:14px;border-radius:14px}
+        .agency-item,.personal-item,.info-row,.history-header,.transaction-line1,.transaction-line2,.transaction-line3{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;min-width:0}
+        .agency-label,.personal-label,.info-row-label{color:var(--primary);font-weight:700;flex-shrink:0}
+        .agency-value,.personal-value,.info-row span:last-child{min-width:0;text-align:right;word-break:break-word}
+        .client-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px;background:var(--soft);border-bottom:1px solid var(--border)}
+        .client-photo{width:78px;height:78px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--primary));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;flex-shrink:0;overflow:hidden;box-shadow:0 10px 24px rgba(37,99,235,.18)}
+        .photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+        .client-photo img{width:100%;height:100%;object-fit:cover;display:none}
+        .client-info{flex:1;min-width:0}
+        .client-name{color:var(--primary);font-weight:800;font-size:clamp(1.15rem,2vw,1.45rem);word-break:break-word}
+        .client-account{margin-top:4px;color:var(--muted);font-size:.84rem}
+        .client-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+        .two-columns{padding:16px}
+        .info-card{background:var(--soft);padding:14px;border-radius:14px}
+        .info-card h3{color:var(--primary);font-size:.96rem;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+        .personal-item{padding:6px 0;border-bottom:1px solid var(--border);font-size:.84rem}
+        .personal-item:last-child{border-bottom:none}
+        .signature-box{min-height:110px;background:#fff;border:1px dashed #cbd5e1;border-radius:12px;padding:12px;text-align:center;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center}
+        .signature-box img{max-width:100%;max-height:70px;display:none}
+        .signature-placeholder{color:#94a3b8;font-size:.8rem}
+        .signature-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+        .balance-card{margin:0 16px 16px;padding:18px;border-radius:14px;text-align:center;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff}
+        .balance-card>div:first-child{letter-spacing:.05em;font-size:.8rem}
+        .balance-amount{margin-top:8px;font-size:clamp(1.55rem,4vw,2rem);font-weight:800}
+        .info-row{padding:10px 16px;border-top:1px solid var(--border);font-size:.88rem}
+        .history-header{padding:12px 16px;background:var(--soft);border-bottom:1px solid var(--border)}
+        .history-header h3{color:var(--primary);font-size:1rem}
+        .transaction-count{color:var(--muted);font-size:.78rem;text-align:right}
+        .history-scroll{max-height:420px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+        .transaction-item{padding:12px 16px;border-bottom:1px solid #f1f5f9;background:#fff}
+        .transaction-item:last-child{border-bottom:none}
+        .transaction-line1,.transaction-line2,.transaction-line3{margin-bottom:8px}
+        .transaction-line3{padding-top:6px;border-top:1px solid #f1f5f9;margin-bottom:0}
+        .transaction-date,.balance-label{color:var(--muted);font-size:.78rem}
+        .transaction-badge,.transaction-status{display:inline-flex;align-items:center;justify-content:center;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:700;white-space:nowrap}
+        .badge-depot{background:#d1fae5;color:#065f46}.badge-retrait{background:#fee2e2;color:#991b1b}.badge-pret{background:#dbeafe;color:#1e40af}.badge-frais{background:#fef3c7;color:#92400e}
+        .status-success{background:#d1fae5;color:#065f46}.status-failed{background:#fee2e2;color:#991b1b}.status-pending{background:#fef3c7;color:#92400e}
+        .deposit,.withdrawal,.balance-value{font-weight:700}.deposit{color:var(--success)}.withdrawal{color:var(--danger)}.balance-value{color:var(--primary)}
+        .pagination{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:var(--soft);border-top:1px solid var(--border)}
+        .pagination-info{color:var(--muted);font-size:.84rem}
+        .pagination-btn:disabled{background:#cbd5e1;cursor:not-allowed}
+        .legal-mentions{padding:14px;background:#fff8f1;border-left:4px solid var(--danger)}
+        .legal-mentions h3{color:var(--primary);font-size:.96rem;margin-bottom:10px}
+        .mention-item{padding:10px;background:#fff;border-radius:10px;margin-bottom:8px;font-size:.82rem}
+        .mention-item:last-child{margin-bottom:0}.mention-item strong{color:#9f1239}
+        .ad-section{background:linear-gradient(135deg,var(--primary),var(--accent));padding:18px;border-radius:16px;color:#fff;text-align:center}
+        .ad-title{font-size:1.08rem;font-weight:800}.ad-features{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0}
+        .ad-feature{background:rgba(255,255,255,.14);padding:6px 10px;border-radius:999px;font-size:.78rem}
+        .notification{position:fixed;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(92vw,420px);background:var(--success);color:#fff;padding:12px 14px;border-radius:12px;text-align:center;z-index:1000;display:none;box-shadow:0 12px 28px rgba(15,23,42,.18);font-size:.86rem}
+        .loading{display:none;align-items:center;justify-content:center;gap:10px;padding:16px;color:var(--muted)}
+        .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @media (max-width:760px){.agency-grid,.two-columns{grid-template-columns:1fr}.header-btn{width:100%}}
+        @media (max-width:640px){.agency-item,.personal-item,.info-row,.history-header,.transaction-line1,.transaction-line2,.transaction-line3{flex-direction:column}.agency-value,.personal-value,.info-row span:last-child{text-align:left}.upload-btn,.secondary-btn,.header-btn,.pagination-btn,.ad-cta,.signature-buttons .btn-sm{width:100%}.client-actions{width:100%}.pagination{flex-direction:column}.history-scroll{max-height:none}}
+        @media (max-width:420px){.client-photo{width:70px;height:70px}.content{padding:14px}}
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+
+    <input class="sr-only" type="file" id="logoUpload" accept="image/*">
+    <input class="sr-only" type="file" id="signatureUpload" accept="image/*">
+    <input class="sr-only" type="file" id="photoUpload" accept="image/*">
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img id="logoImg" class="logo-img" src="" alt="Finec">
+                <div id="logoPlaceholder" class="logo-placeholder">Logo</div>
+            </div>
+            <div class="header-title">
+                <h1>Carnet Digital Finec</h1>
+                <p>Microfinance Burkina S.A</p>
+            </div>
+            <button type="button" class="header-btn" id="logoUploadBtn">Changer le logo</button>
+        </div>
+
+        <div class="content">
+            <section>
+                <h2 class="section-title">Informations de l&#39;Agence</h2>
+                <div class="agency-grid">
+                    <div class="agency-item"><span class="agency-label">Agence</span><span class="agency-value">Principale</span></div>
+                    <div class="agency-item"><span class="agency-label">Code Agence</span><span class="agency-value">B01004773</span></div>
+                    <div class="agency-item"><span class="agency-label">R&eacute;f&eacute;rence</span><span class="agency-value">AGP004773</span></div>
+                    <div class="agency-item"><span class="agency-label">Raison Sociale</span><span class="agency-value">Finec Microfinance Burkina S.A</span></div>
+                    <div class="agency-item"><span class="agency-label">Date Cr&eacute;ation</span><span class="agency-value">15/05/2015</span></div>
+                    <div class="agency-item"><span class="agency-label">Si&egrave;ge Social</span><span class="agency-value">Ouagadougou, Burkina Faso</span></div>
+                    <div class="agency-item"><span class="agency-label">Immatriculation</span><span class="agency-value">IG10M201XXX</span></div>
+                    <div class="agency-item"><span class="agency-label">D&eacute;livr&eacute; le</span><span class="agency-value">12/03/2024</span></div>
+                    <div class="agency-item"><span class="agency-label">T&eacute;l&eacute;phone</span><span class="agency-value">72 72 71 31</span></div>
+                </div>
+            </section>
+
+            <section class="panel client-card">
+                <div class="client-header">
+                    <div class="client-photo" id="clientPhoto">
+                        <div class="photo-placeholder" id="photoPlaceholder">FT</div>
+                        <img id="clientPhotoImg" src="" alt="Photo du client">
+                    </div>
+                    <div class="client-info">
+                        <div class="client-name" id="clientName">Fatou TRAORE</div>
+                        <div class="client-account" id="clientAccount">N&deg; Compte : 001-237-456</div>
+                    </div>
+                    <div class="client-actions">
+                        <button type="button" class="secondary-btn" id="generatePhotoBtn">Générer portrait</button>
+                        <button type="button" class="upload-btn" id="photoUploadBtn">Importer photo</button>
+                    </div>
+                </div>
+
+                <div class="two-columns">
+                    <div class="info-card">
+                        <h3>Informations Personnelles</h3>
+                        <div class="personal-item"><span class="personal-label">Date de naissance</span><span class="personal-value" id="clientBirthDate">12/08/1985</span></div>
+                        <div class="personal-item"><span class="personal-label">Lieu de naissance</span><span class="personal-value" id="clientBirthPlace">Ouagadougou</span></div>
+                        <div class="personal-item"><span class="personal-label">T&eacute;l&eacute;phone</span><span class="personal-value" id="clientPhone">90 12 34 56</span></div>
+                        <div class="personal-item"><span class="personal-label">Adh&eacute;sion</span><span class="personal-value" id="clientJoinDate">15/01/2023</span></div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Signature &Eacute;lectronique</h3>
+                        <div class="signature-box" id="signatureBox">
+                            <img id="signatureImg" src="" alt="Signature">
+                            <div class="signature-placeholder" id="signaturePlaceholder">Charger la signature</div>
+                        </div>
+                        <div class="signature-buttons">
+                            <button type="button" class="btn-sm" id="signatureUploadBtn">Changer</button>
+                            <button type="button" class="btn-sm btn-danger" id="clearSignatureBtn">Supprimer</button>
+                        </div>
+                        <div class="personal-item" style="margin-top:8px;border-bottom:none;">
+                            <span class="personal-label">Statut</span>
+                            <span class="personal-value" id="signatureStatus" style="color:#10b981;">Valid&eacute;e</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="balance-card">
+                    <div>SOLDE DISPONIBLE</div>
+                    <div class="balance-amount" id="clientBalance">75 500 FCFA</div>
+                </div>
+
+                <div class="info-row"><span class="info-row-label">Produit Souscrit</span><span id="clientProduct">&Eacute;pargne - Cr&eacute;dit</span></div>
+                <div class="info-row"><span class="info-row-label">Derni&egrave;re Transaction</span><span id="lastTransaction">25/05/2024</span></div>
+            </section>
+
+            <section class="history-section">
+                <div class="history-header">
+                    <h3>Historique des Transactions</h3>
+                    <div class="transaction-count">
+                        <div id="transactionCount">1-5</div>
+                        <div>derni&egrave;res</div>
+                    </div>
+                </div>
+                <div class="history-scroll" id="historyScroll">
+                    <div class="transactions-list" id="transactionsList">
+                        <div class="transaction-item" style="color:#64748b;">Chargement...</div>
+                    </div>
+                </div>
+                <div class="pagination" id="paginationControls">
+                    <button type="button" class="pagination-btn" id="prevPageBtn" disabled>Pr&eacute;c&eacute;dent</button>
+                    <div class="pagination-info" id="paginationInfo">Page 1 sur 1</div>
+                    <button type="button" class="pagination-btn" id="nextPageBtn" disabled>Suivant</button>
+                </div>
+            </section>
+
+            <section class="legal-mentions">
+                <h3>Mentions Importantes</h3>
+                <div class="mention-item"><strong>Usage Restreint :</strong> Aucune personne que vous et votre mandataire ne peut utiliser ce carnet.</div>
+                <div class="mention-item"><strong>Pr&eacute;sentation Obligatoire :</strong> Ce carnet doit &ecirc;tre pr&eacute;sent&eacute; &agrave; la caisse &agrave; chaque op&eacute;ration.</div>
+                <div class="mention-item"><strong>V&eacute;rification :</strong> V&eacute;rifiez que l&#39;op&eacute;ration est conforme avant de partir.</div>
+                <div class="mention-item"><strong>En cas de Perte :</strong> Contactez Finec Microfinance au <strong>25 34 51 00</strong>.</div>
+            </section>
+
+            <section class="ad-section">
+                <div class="ad-title">D&eacute;couvrez Nos Nouveaux Services !</div>
+                <div class="ad-features">
+                    <span class="ad-feature">&Eacute;pargne</span>
+                    <span class="ad-feature">Cr&eacute;dit</span>
+                    <span class="ad-feature">Mobile</span>
+                    <span class="ad-feature">Assurance</span>
+                </div>
+                <button type="button" class="ad-cta" id="contactBtn">Contactez-nous</button>
+            </section>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+    <script>
+        let currentPage = 1;
+        const rowsPerPage = 5;
+        let allTransactions = [];
+        let notifTimer = null;
+
+        const clientData = {
+            account: "001-237-456",
+            nom: "TRAORE",
+            prenom: "Fatou",
+            phone: "90 12 34 56",
+            balance: 75500,
+            product: "\u00c9pargne - Cr\u00e9dit",
+            joinDate: "15/01/2023",
+            birthDate: "12/08/1985",
+            birthPlace: "Ouagadougou, Burkina Faso",
+            signature: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' viewBox='0 0 200 80'%3E%3Cpath d='M20,40 Q50,20 80,40 Q110,60 140,40 Q170,20 200,40' stroke='%231e3a8a' stroke-width='3' fill='none'/%3E%3Ctext x='100' y='70' text-anchor='middle' fill='%2364748b' font-size='12'%3EFatou TRAORE%3C/text%3E%3C/svg%3E",
+            photo: ""
+        };
+
+        function byId(id) { return document.getElementById(id); }
+        function storeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+        function storeSet(key, value) { try { localStorage.setItem(key, value); return true; } catch (e) { showNotif("Enregistrement local indisponible.", "error"); return false; } }
+        function storeRemove(key) { try { localStorage.removeItem(key); } catch (e) { showNotif("Suppression locale indisponible.", "error"); } }
+        function formatMoney(value) { return value.toLocaleString("fr-FR"); }
+        function setText(id, value) { const el = byId(id); if (el) el.textContent = value; }
+        function hashString(value) {
+            let hash = 0;
+            for (let i = 0; i < value.length; i++) {
+                hash = ((hash << 5) - hash) + value.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash);
+        }
+
+        function createGeneratedClientPhoto(seedInput) {
+            const seed = hashString(seedInput);
+            const backdrops = [
+                ["#edf2f7", "#dbe4ee"],
+                ["#eef4f8", "#d3dee9"],
+                ["#e9eef5", "#cad7e5"],
+                ["#efe9e2", "#ddd4cb"]
+            ];
+            const complexions = [
+                { base: "#d8a07d", shade: "#b77d5d", light: "#efc2a0", blush: "#c98572" },
+                { base: "#bf835f", shade: "#9c6246", light: "#dca27d", blush: "#b67060" },
+                { base: "#9e6549", shade: "#7a4833", light: "#bb8061", blush: "#975a4b" },
+                { base: "#7b4b37", shade: "#5a3325", light: "#96614a", blush: "#79483b" },
+                { base: "#60392c", shade: "#43271d", light: "#7c4d3c", blush: "#653d34" }
+            ];
+            const hairColors = ["#191310", "#231814", "#2e221c", "#15110f"];
+            const garments = ["#123b7a", "#0f5b55", "#5f2c70", "#7a2d3c", "#374151"];
+            const lipColors = ["#8d574f", "#834941", "#744038", "#6a3833", "#5f312d"];
+            const backdrop = backdrops[seed % backdrops.length];
+            const complexion = complexions[(seed >> 2) % complexions.length];
+            const hair = hairColors[(seed >> 4) % hairColors.length];
+            const garment = garments[(seed >> 6) % garments.length];
+            const lip = lipColors[(seed >> 5) % lipColors.length];
+            const hairStyle = seed % 4;
+            const eyebrowLift = (seed % 3) + 1;
+            const eyeHeight = 67 + (seed % 2);
+            const faceWidth = 27 + (seed % 3);
+            const bunShift = 90 + (seed % 6);
+            const blouseTone = seed % 2 === 0 ? "#ffffff" : "#eef2f7";
+            const hairShapes = [
+                "<path d='M36 49c2-16 15-28 32-28 18 0 31 11 33 28-8-5-17-8-28-8-12 0-26 3-37 8Z' fill='" + hair + "'/><path d='M34 61c0-17 13-31 30-31 18 0 31 14 31 31 0 2 0 5-1 7-8-8-18-13-31-13-12 0-22 4-30 13-1-2-1-5-1-7Z' fill='" + hair + "'/>",
+                "<path d='M27 59c1-23 18-39 37-39 21 0 37 15 38 39-9-8-23-14-38-14-15 0-29 5-37 14Z' fill='" + hair + "'/><circle cx='41' cy='42' r='10' fill='" + hair + "'/><circle cx='88' cy='39' r='12' fill='" + hair + "'/>",
+                "<path d='M33 56c4-19 17-31 32-31 18 0 31 12 34 31-10-6-22-10-34-10-11 0-23 3-32 10Z' fill='" + hair + "'/><path d='M39 28c8-6 16-9 25-9 10 0 18 3 26 10' stroke='" + hair + "' stroke-width='4' stroke-linecap='round' fill='none'/><path d='M42 31c0 11-2 17-2 28M50 27c0 13-1 21-1 33M58 25c0 11 0 20 0 35M66 24c0 11 0 20 0 35M74 25c0 12 1 21 1 34M82 27c1 12 2 20 2 31' stroke='" + hair + "' stroke-width='2.3' stroke-linecap='round' opacity='.82' fill='none'/>",
+                "<path d='M34 57c2-20 15-33 30-33 18 0 31 12 34 34-9-8-21-11-34-11-13 0-22 2-30 10Z' fill='" + hair + "'/><circle cx='" + bunShift + "' cy='41' r='11' fill='" + hair + "'/><path d='M41 31c7-6 15-9 24-9 9 0 17 3 25 9' stroke='" + hair + "' stroke-width='4' stroke-linecap='round' fill='none' opacity='.9'/>"
+            ];
+            const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128' role='img' aria-label='Portrait photo identite genere'>" +
+                "<defs>" +
+                    "<linearGradient id='bg' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='" + backdrop[0] + "'/><stop offset='100%' stop-color='" + backdrop[1] + "'/></linearGradient>" +
+                    "<radialGradient id='faceLight' cx='42%' cy='38%' r='62%'><stop offset='0%' stop-color='" + complexion.light + "' stop-opacity='.72'/><stop offset='100%' stop-color='" + complexion.base + "' stop-opacity='0'/></radialGradient>" +
+                "</defs>" +
+                "<rect width='128' height='128' rx='24' fill='url(#bg)'/>" +
+                "<rect x='8' y='8' width='112' height='112' rx='18' fill='none' stroke='rgba(255,255,255,.55)'/>" +
+                "<ellipse cx='64' cy='126' rx='44' ry='30' fill='" + garment + "'/>" +
+                "<path d='M37 128c4-16 15-28 27-31 12 3 23 15 27 31Z' fill='" + garment + "'/>" +
+                "<path d='M49 100c4 8 10 12 15 12 6 0 11-4 15-12l11 28H38Z' fill='" + blouseTone + "' opacity='.96'/>" +
+                "<path d='M53 84h22v18c-3 4-7 6-11 6-4 0-8-2-11-6Z' fill='" + complexion.shade + "' opacity='.95'/>" +
+                "<ellipse cx='64' cy='63' rx='" + faceWidth + "' ry='33' fill='" + complexion.base + "'/>" +
+                "<ellipse cx='56' cy='58' rx='11' ry='16' fill='url(#faceLight)'/>" +
+                hairShapes[hairStyle] +
+                "<ellipse cx='37' cy='70' rx='4.5' ry='7' fill='" + complexion.base + "'/><ellipse cx='91' cy='70' rx='4.5' ry='7' fill='" + complexion.base + "'/>" +
+                "<path d='M44 58q7 -" + eyebrowLift + " 15 0' stroke='" + hair + "' stroke-width='2.4' stroke-linecap='round' fill='none'/><path d='M69 58q7 -" + eyebrowLift + " 15 0' stroke='" + hair + "' stroke-width='2.4' stroke-linecap='round' fill='none'/>" +
+                "<path d='M45 67q7-4 14 0q-7 4-14 0Z' fill='#f8fafc' opacity='.95'/><path d='M69 67q7-4 14 0q-7 4-14 0Z' fill='#f8fafc' opacity='.95'/>" +
+                "<circle cx='52' cy='" + eyeHeight + "' r='2.3' fill='#1f2937'/><circle cx='76' cy='" + eyeHeight + "' r='2.3' fill='#1f2937'/>" +
+                "<circle cx='53' cy='" + eyeHeight + "' r='.7' fill='#ffffff'/><circle cx='77' cy='" + eyeHeight + "' r='.7' fill='#ffffff'/>" +
+                "<path d='M64 69c-2 6-2 11 1 15' stroke='" + complexion.shade + "' stroke-width='2.1' stroke-linecap='round' fill='none' opacity='.82'/>" +
+                "<path d='M58 85q6 3 12 0' stroke='" + complexion.shade + "' stroke-width='1.6' stroke-linecap='round' fill='none' opacity='.5'/>" +
+                "<ellipse cx='47' cy='79' rx='5.3' ry='3.2' fill='" + complexion.blush + "' opacity='.22'/><ellipse cx='81' cy='79' rx='5.3' ry='3.2' fill='" + complexion.blush + "' opacity='.22'/>" +
+                "<path d='M52 89q12 6 24 0' fill='" + lip + "' opacity='.88'/><path d='M53 88q11 3 22 0' stroke='#f8d6cf' stroke-width='.8' stroke-linecap='round' fill='none' opacity='.45'/>" +
+                "<path d='M41 93c6 8 14 12 23 12 9 0 17-4 23-12' stroke='rgba(15,23,42,.06)' stroke-width='4' stroke-linecap='round' fill='none'/>" +
+                "</svg>";
+            return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+        }
+
+        function getGeneratedClientPhoto() {
+            const variant = Number(storeGet("client_photo_variant") || 0);
+            const seed = [clientData.prenom, clientData.nom, clientData.account, variant].join("|");
+            return createGeneratedClientPhoto(seed);
+        }
+
+        function showNotif(message, type = "success") {
+            const el = byId("notification");
+            if (!el) return;
+            el.textContent = message;
+            el.style.background = type === "success" ? "#10b981" : "#ef4444";
+            el.style.display = "block";
+            if (notifTimer) clearTimeout(notifTimer);
+            notifTimer = setTimeout(function () { el.style.display = "none"; }, 2400);
+        }
+
+        function setLogo(url) {
+            const img = byId("logoImg");
+            const placeholder = byId("logoPlaceholder");
+            if (!img || !placeholder) return;
+            if (url) {
+                img.src = url;
+                img.style.display = "block";
+                placeholder.style.display = "none";
+            } else {
+                img.removeAttribute("src");
+                img.style.display = "none";
+                placeholder.style.display = "flex";
+            }
+        }
+
+        function setPhoto(url) {
+            const img = byId("clientPhotoImg");
+            const placeholder = byId("photoPlaceholder");
+            if (!img || !placeholder) return;
+            if (url) {
+                img.src = url;
+                img.style.display = "block";
+                placeholder.style.display = "none";
+            } else {
+                img.removeAttribute("src");
+                img.style.display = "none";
+                placeholder.textContent = (clientData.prenom[0] + clientData.nom[0]).toUpperCase();
+                placeholder.style.display = "flex";
+            }
+        }
+
+        function setSignature(url) {
+            const img = byId("signatureImg");
+            const placeholder = byId("signaturePlaceholder");
+            const status = byId("signatureStatus");
+            if (!img || !placeholder || !status) return;
+            if (url) {
+                img.src = url;
+                img.style.display = "block";
+                placeholder.style.display = "none";
+                status.textContent = "Valid\u00e9e";
+                status.style.color = "#10b981";
+            } else {
+                img.removeAttribute("src");
+                img.style.display = "none";
+                placeholder.style.display = "block";
+                status.textContent = "Non sign\u00e9e";
+                status.style.color = "#ef4444";
+            }
+        }
+
+        function generateTransactions() {
+            const types = ["D\u00e9p\u00f4t \u00c9pargne", "Retrait \u00c9pargne", "Pr\u00eat Personnel", "Remboursement Pr\u00eat", "Frais de Gestion", "Int\u00e9r\u00eats Cr\u00e9dit"];
+            const statuses = ["succ\u00e8s", "succ\u00e8s", "succ\u00e8s", "succ\u00e8s", "succ\u00e8s", "succ\u00e8s", "\u00e9chec", "en attente"];
+            const rows = [];
+            let runningBalance = 25000;
+            for (let i = 0; i < 36; i++) {
+                const daysAgo = Math.floor(Math.random() * 300);
+                const date = new Date();
+                date.setDate(date.getDate() - daysAgo);
+                const type = types[Math.floor(Math.random() * types.length)];
+                let deposit = 0;
+                let withdrawal = 0;
+                if (type.includes("D\u00e9p\u00f4t") || type.includes("Int\u00e9r\u00eats")) deposit = Math.floor(Math.random() * 30000) + 1000;
+                else if (type.includes("Retrait")) withdrawal = Math.floor(Math.random() * 20000) + 500;
+                else if (type.includes("Pr\u00eat")) deposit = Math.floor(Math.random() * 80000) + 10000;
+                else if (type.includes("Remboursement")) withdrawal = Math.floor(Math.random() * 20000) + 5000;
+                else withdrawal = Math.floor(Math.random() * 5000) + 500;
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                rows.push({ date: date.toLocaleDateString("fr-FR"), sortValue: date.getTime(), type, deposit, withdrawal, status, balance: 0 });
+            }
+            rows.sort(function (a, b) { return a.sortValue - b.sortValue; });
+            rows.forEach(function (row) {
+                runningBalance += row.deposit - row.withdrawal;
+                if (runningBalance < 0) runningBalance = 0;
+                row.balance = runningBalance;
+            });
+            return rows.reverse();
+        }
+
+        function getBadgeClass(type) {
+            if (type.includes("D\u00e9p\u00f4t") || type.includes("Int\u00e9r\u00eats")) return "badge-depot";
+            if (type.includes("Retrait")) return "badge-retrait";
+            if (type.includes("Frais")) return "badge-frais";
+            if (type.includes("Pr\u00eat")) return "badge-pret";
+            return "badge-depot";
+        }
+
+        function getStatusClass(status) {
+            if (status === "succ\u00e8s") return "status-success";
+            if (status === "\u00e9chec") return "status-failed";
+            return "status-pending";
+        }
+
+        function renderTransactions(page) {
+            const container = byId("transactionsList");
+            if (!container) return;
+            const totalPages = Math.max(1, Math.ceil(allTransactions.length / rowsPerPage));
+            currentPage = Math.min(Math.max(page, 1), totalPages);
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const items = allTransactions.slice(start, end);
+            if (!items.length) {
+                container.innerHTML = '<div class="transaction-item" style="color:#64748b;">Aucune transaction</div>';
+                setText("paginationInfo", "Page 1 sur 1");
+                setText("transactionCount", "0");
+                return;
+            }
+            container.innerHTML = "";
+            items.forEach(function (item) {
+                const row = document.createElement("div");
+                row.className = "transaction-item";
+                row.innerHTML = '<div class="transaction-line1"><span class="transaction-date">' + item.date + '</span><span class="transaction-badge ' + getBadgeClass(item.type) + '">' + item.type + '</span></div><div class="transaction-line2">' + (item.deposit > 0 ? '<span class="deposit">+ ' + formatMoney(item.deposit) + ' FCFA</span>' : '<span class="deposit">-</span>') + (item.withdrawal > 0 ? '<span class="withdrawal">- ' + formatMoney(item.withdrawal) + ' FCFA</span>' : '<span class="withdrawal">-</span>') + '</div><div class="transaction-line3"><span class="balance-label">Solde</span><span class="balance-value">' + formatMoney(item.balance) + ' FCFA</span></div><div style="margin-top:6px;"><span class="transaction-status ' + getStatusClass(item.status) + '">' + item.status.toUpperCase() + '</span></div>';
+                container.appendChild(row);
+            });
+            setText("paginationInfo", "Page " + currentPage + " sur " + totalPages);
+            setText("transactionCount", (start + 1) + "-" + Math.min(end, allTransactions.length));
+            byId("prevPageBtn").disabled = currentPage === 1;
+            byId("nextPageBtn").disabled = currentPage === totalPages;
+        }
+
+        function displayClient() {
+            setText("clientName", clientData.prenom + " " + clientData.nom);
+            setText("clientAccount", "N\u00b0 Compte : " + clientData.account);
+            setText("clientBirthDate", clientData.birthDate);
+            setText("clientBirthPlace", clientData.birthPlace);
+            setText("clientPhone", clientData.phone);
+            setText("clientJoinDate", clientData.joinDate);
+            setText("clientBalance", formatMoney(clientData.balance) + " FCFA");
+            setText("clientProduct", clientData.product);
+            setPhoto(storeGet("client_photo_custom") || storeGet("client_photo") || clientData.photo || getGeneratedClientPhoto());
+            setSignature(storeGet("client_signature") || clientData.signature);
+        }
+
+        function clearSignature() {
+            if (confirm("Supprimer la signature ?")) {
+                storeRemove("client_signature");
+                setSignature("");
+                showNotif("Signature supprim\u00e9e");
+            }
+        }
+
+        function showAdDetails() { alert("Contactez-nous au 25 34 51 00 ou visitez notre agence !"); }
+
+        function handleImageUpload(file, callback) {
+            if (!file) return;
+            if (!file.type || !file.type.startsWith("image/")) { showNotif("Veuillez s\u00e9lectionner une image valide.", "error"); return; }
+            if (file.size > 5 * 1024 * 1024) { showNotif("Fichier trop volumineux (max 5 MB)", "error"); return; }
+            const reader = new FileReader();
+            reader.onload = function (event) { callback(event.target.result); };
+            reader.onerror = function () { showNotif("Impossible de lire le fichier s\u00e9lectionn\u00e9.", "error"); };
+            reader.readAsDataURL(file);
+        }
+
+        function bindEvents() {
+            byId("logoUploadBtn").addEventListener("click", function () { byId("logoUpload").click(); });
+            byId("logoPlaceholder").addEventListener("click", function () { byId("logoUpload").click(); });
+            byId("generatePhotoBtn").addEventListener("click", function () {
+                const nextVariant = Number(storeGet("client_photo_variant") || 0) + 1;
+                storeSet("client_photo_variant", String(nextVariant));
+                storeRemove("client_photo_custom");
+                storeRemove("client_photo");
+                setPhoto(getGeneratedClientPhoto());
+                showNotif("Nouveau portrait photo d'identité généré.");
+            });
+            byId("photoUploadBtn").addEventListener("click", function () { byId("photoUpload").click(); });
+            byId("signatureUploadBtn").addEventListener("click", function () { byId("signatureUpload").click(); });
+            byId("signatureBox").addEventListener("click", function () { byId("signatureUpload").click(); });
+            byId("clearSignatureBtn").addEventListener("click", clearSignature);
+            byId("prevPageBtn").addEventListener("click", function () { renderTransactions(currentPage - 1); });
+            byId("nextPageBtn").addEventListener("click", function () { renderTransactions(currentPage + 1); });
+            byId("contactBtn").addEventListener("click", showAdDetails);
+            byId("logoUpload").addEventListener("change", function (e) { handleImageUpload(e.target.files[0], function (url) { storeSet("company_logo", url); setLogo(url); showNotif("Logo charg\u00e9"); }); e.target.value = ""; });
+            byId("photoUpload").addEventListener("change", function (e) { handleImageUpload(e.target.files[0], function (url) { storeSet("client_photo_custom", url); storeSet("client_photo", url); setPhoto(url); showNotif("Photo client importée."); }); e.target.value = ""; });
+            byId("signatureUpload").addEventListener("change", function (e) { handleImageUpload(e.target.files[0], function (url) { storeSet("client_signature", url); setSignature(url); showNotif("Signature enregistr\u00e9e"); }); e.target.value = ""; });
+        }
+
+        function init() {
+            bindEvents();
+            allTransactions = generateTransactions();
+            if (allTransactions.length) {
+                clientData.balance = allTransactions[0].balance;
+                setText("lastTransaction", allTransactions[0].date);
+            }
+            displayClient();
+            setLogo(storeGet("company_logo"));
+            renderTransactions(1);
+        }
+
+        window.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>
